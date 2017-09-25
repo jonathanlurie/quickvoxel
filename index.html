@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>volume 3D Navigator</title>
+  <title>QUICKVOXEL</title>
 
   <script src="https://threejs.org/build/three.min.js"></script>
   <script src='https://threejs.org/examples/js/libs/dat.gui.min.js'></script>
@@ -221,6 +221,8 @@
 
     // The filter to read image from URL
     var file2Buff = new pixpipe.FileToArrayBufferReader();
+    var mniVolume = null;
+    var v2w = null;
     var gui = new dat.GUI( {width: 300});
     var guiParam = {};
     var spaceLength = {};
@@ -312,9 +314,59 @@
         screenContainer.children[2].visible = val;
       })
 
+      
+      guiParam.position = Math.round(0.5*spaceLength.x*10)/10 + ", " + Math.round(0.5*spaceLength.y*10)/10 + ", " + Math.round(0.5*spaceLength.z*10)/10;
+      gui.add(guiParam, 'position').name("Position")
+      .onFinishChange(function(val){
+        var backup = screenContainer.position.clone();
+        try{
+          // the pos in the fiels is with the MNI cube (always positive)
+          var posValues = val.split(',');
+          var fieldPos = {
+            x: parseFloat(posValues[0]),
+            y: parseFloat(posValues[1]),
+            z: parseFloat(posValues[2])
+          }
+          
+          if( fieldPos.x > 0 && fieldPos.x < spaceLength.x &&
+              fieldPos.y > 0 && fieldPos.y < spaceLength.y &&
+              fieldPos.z > 0 && fieldPos.z < spaceLength.z )
+          {
+            // gl position is centered on 0
+            var glPos = fromMniPosToGlPosVoxel(fieldPos);
+            screenContainer.position.set( glPos.x, glPos.y, glPos.z );
+          }
+        }catch(e){
+          console.warn( e );
+        }
+      })
+      .listen()
+      
+      
+      guiParam.rotation = "0, 0, 0";
+      gui.add(guiParam, 'rotation').name("Rotation")
+      .onFinishChange(function(val){
+        var backup = screenContainer.position.clone();
+        try{
+          // the pos in the fiels is with the MNI cube (always positive)
+          var rotValues = val.split(',');
+          var fieldRot = {
+            x: parseFloat(rotValues[0]),
+            y: parseFloat(rotValues[1]),
+            z: parseFloat(rotValues[2])
+          }
+
+          screenContainer.rotation.set( fieldRot.x, fieldRot.y, fieldRot.z );
+          
+        }catch(e){
+          console.warn( e );
+        }
+      })
+      .listen();
 
       guiParam.centerPosition = function(){
         centerPosition();
+        updateRotPosDisplay();
       }
       gui.add(guiParam, 'centerPosition').name('Center position');
 
@@ -325,6 +377,7 @@
         screenContainer.rotation.x = 0;
         screenContainer.rotation.y = 0;
         screenContainer.rotation.z = 0;
+        updateRotPosDisplay();
       }
       gui.add(guiParam, 'resetRotation').name('Reset rotation');
 
@@ -348,7 +401,9 @@
         shaderMat.uniforms.enableCurve.value = val;
         updateCurveTexture();
       })
-
+      
+      
+      
     }
 
     function centerPosition(){
@@ -487,14 +542,25 @@
       
       
       planeShifter.on("translation", function(){
-        var voxelPos = fromGlPosToMniPosVoxel( screenContainer.position );
-        console.log( voxelPos );
-        console.log('-----------------');
+        updateRotPosDisplay();
+      })
+      
+      planeShifter.on("rotation", function(){
+        updateRotPosDisplay();
       })
       
       
     }
     
+    
+    function updateRotPosDisplay(){
+      // position
+      var voxelPos = fromGlPosToMniPosVoxel( screenContainer.position );
+      guiParam.position = Math.round(voxelPos.x*10)/10 + ", " + Math.round(voxelPos.y*10)/10 + ", " + Math.round(voxelPos.z*10)/10;
+      
+      // rotation
+      guiParam.rotation = Math.round(screenContainer.rotation.x*100)/100 + ", " + Math.round(screenContainer.rotation.y*100)/100 + ", " + Math.round(screenContainer.rotation.z*100)/100
+    }
     
     
     /**
@@ -507,7 +573,15 @@
         z: pos.z + spaceLength.z/2
       }
     }
-
+    
+    
+    function fromMniPosToGlPosVoxel( pos ){
+      return {
+        x: pos.x - spaceLength.x/2,
+        y: (pos.y - spaceLength.y/2 ) * -1,
+        z: pos.z - spaceLength.z/2
+      }
+    }
 
     // to refresh the aspect ratio when the windows is resized
     window.addEventListener( 'resize', function () {
@@ -535,14 +609,10 @@
         return;
       }
 
-      var mniVolume = genericDecoder.getOutput();
+      mniVolume = genericDecoder.getOutput();
 
       if(mniVolume){
-        console.log(mniVolume);
-
         var mosaicFilter = new pixpipe.Image3DToMosaicFilter();
-        //mosaicFilter.setMetadata("maxWidth", 16000);
-        //mosaicFilter.setMetadata("maxHeight", 16000);
         
         // genericDecoder ouputs a pixpipe.MniVolume, which iherit pixpipe.Image3D
         // making it compatible with pixpipe.Image3DToMosaicFilter
@@ -599,7 +669,7 @@
         spaceLength.y = mniVolume.getMetadata("yspace").space_length;
         spaceLength.z = mniVolume.getMetadata("zspace").space_length;
         spaceLength.t = mniVolume.getTimeLength();
-
+        
         // since the volume is loaded, we can create the 3D env
         initEnv3D();
       }else{
