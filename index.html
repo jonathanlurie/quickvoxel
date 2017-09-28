@@ -17,7 +17,7 @@
   body {
     margin:0;
     font-family: "Lucida Console", monospace;
-    font-size: 15px;
+    font-size: 13px;
     line-height: 18px;
     overflow: hidden;
   }
@@ -31,7 +31,7 @@
     position: fixed;
     margin-left: 8px;
     margin-top: 10px;
-    pointer-events: none;
+
   }
   
   #title h1 {
@@ -129,7 +129,6 @@
     text-align: center;
     padding: 10px;
     font-family: inherit;
-    pointer-events: none;
   }
   
   #footer {
@@ -138,13 +137,11 @@
     left: 0;
     right: 0;
     text-align: center;
-    padding: 15px;
+    /*padding: 15px;*/
     font-family: inherit;
-    pointer-events: none;
   }
 
   #fileInfo{
-    pointer-events: none;
     color: black;
   }
 
@@ -167,12 +164,18 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 320px;
-    height: 320px;
+    width: 330px;
+    height: 335px;
+    font-size: 11px;
+    text-align: center;
   }
   
   #curveContainer canvas {
     margin: 2px;
+  }
+  
+  .noPointerEvent {
+    pointer-events: none;
   }
 
   </style>
@@ -181,24 +184,26 @@
   
   
   
-  <div id="title" >
+  <div id="title" class="noPointerEvent" >
     <h1>QUICKVOXEL</h1>
   </div>
 
   <input type="file" id="fileInput" style="display: none;">
 
-  <div id="info">
-    <span id="fileInfo"></span>
+  <div id="info" class="noPointerEvent">
+    <span id="fileInfo" class="noPointerEvent"></span>
   </div>
   
-  <div id="curveContainer" style="display: none"></div>
+  <div id="curveContainer" style="display: none">
+  <span class="noPointerEvent">Double-click on graph to add contrast points</span>
+  </div>
     
   
   <a href="https://github.com/jonathanlurie/quickvoxel" target="_blank">
     <img class="logoCorner" src="images/githubLogo.png"/>
   </a>
   
-  <div id="footer">
+  <div id="footer" class="noPointerEvent">
     <p>Press key <key>T</key> while grabbing a plane to translate it along its normal vector</p>
     <p>Press key <key>R</key> while grabbing a plane to spin it around its center</p>
   </div>
@@ -399,6 +404,7 @@
       gui.add(guiParam, 'enableCurve').name('Curve contrast')
       .onChange(function(val){
         shaderMat.uniforms.enableCurve.value = val;
+        document.getElementById("curveContainer").style.display = val ? "inherit" : "none";
         updateCurveTexture();
       })
       
@@ -427,7 +433,7 @@
       boxHelper = new THREE.EdgesHelper( boxMesh, 0xff9999 );
       container.add( boxHelper );
       // adjust the camera to the box
-      camera.position.z =  - spaceLength.z;
+      camera.position.z = spaceLength.z;
       camera.lookAt(new THREE.Vector3(0,0,0));
     }
 

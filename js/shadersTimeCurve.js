@@ -238,10 +238,12 @@ shaders.fragmentMultipleInterpolation = `
 
     // worldCoord is [0, n], but the box is centered on 0 to make rotation work better
     // so worldCoordShifted is like worldCoord but shifted of half size in each direction
-    //vec3 worldCoordShifted = vec3( worldCoord.x + xspaceLength/2.0, worldCoord.y + yspaceLength/2.0, worldCoord.z + zspaceLength/2.0);
+    vec3 worldCoordShifted = vec3( worldCoord.x + xspaceLength/2.0, worldCoord.y + yspaceLength/2.0, worldCoord.z + zspaceLength/2.0);
     
     // This version makes the antero side up (default: down)
-    vec3 worldCoordShifted = vec3( worldCoord.x + xspaceLength/2.0, -1.0*worldCoord.y + yspaceLength/2.0, -1.0*worldCoord.z + zspaceLength/2.0);
+    //vec3 worldCoordShifted = vec3( worldCoord.x + xspaceLength/2.0, -1.0*worldCoord.y + yspaceLength/2.0, -1.0*worldCoord.z + zspaceLength/2.0);
+    //vec3 worldCoordShifted = vec3( worldCoord.x + xspaceLength/2.0, worldCoord.y + yspaceLength/2.0, -1.0*worldCoord.z + zspaceLength/2.0);
+
 
     // hide the outside
     if( isOusideTheVolume(worldCoordShifted) )
