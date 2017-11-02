@@ -593,9 +593,11 @@
 
     // to refresh the aspect ratio when the windows is resized
     window.addEventListener( 'resize', function () {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize( window.innerWidth, window.innerHeight );
+      if( camera ){
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+      }
     }, false );
 
 
