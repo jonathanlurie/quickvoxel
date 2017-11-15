@@ -6,6 +6,7 @@ import { Foo } from './Foo.js';
 
 var f = new Foo();
 
+
 var threePlayground = new ThreePlayground({
   target: document.body
 })

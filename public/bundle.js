@@ -5104,7 +5104,7 @@ Object.assign( WebGLRenderTarget.prototype, EventDispatcher.prototype, {
 } );
 
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author alteredq / http://alteredqualia.com
  */
 
 function DataTexture( data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding ) {
@@ -13479,6 +13479,8 @@ Object.assign( BufferAttribute.prototype, {
 
 } );
 
+//
+
 function Uint16BufferAttribute( array, itemSize, normalized ) {
 
 	BufferAttribute.call( this, new Uint16Array( array ), itemSize, normalized );
@@ -13508,10 +13510,6 @@ function Float32BufferAttribute( array, itemSize, normalized ) {
 Float32BufferAttribute.prototype = Object.create( BufferAttribute.prototype );
 Float32BufferAttribute.prototype.constructor = Float32BufferAttribute;
 
-
-/**
- * @author mrdoob / http://mrdoob.com/
- */
 
 function DirectGeometry() {
 
@@ -25453,7 +25451,7 @@ Group.prototype = Object.assign( Object.create( Object3D.prototype ), {
 } );
 
 /**
- * @author alteredq / http://alteredqualia.com/
+ * @author mrdoob / http://mrdoob.com/
  */
 
 function CompressedTexture( mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding ) {
@@ -25481,8 +25479,8 @@ CompressedTexture.prototype.constructor = CompressedTexture;
 CompressedTexture.prototype.isCompressedTexture = true;
 
 /**
- * @author mrdoob / http://mrdoob.com/
- * @author Mugen87 / https://github.com/Mugen87
+ * @author Matt DesLauriers / @mattdesl
+ * @author atix / arthursilber.de
  */
 
 function WireframeGeometry( geometry ) {
@@ -37407,7 +37405,10 @@ Object.assign( StereoCamera.prototype, {
 } );
 
 /**
- * @author mrdoob / http://mrdoob.com/
+ * Camera for rendering cube maps
+ *	- renders scene into axis-aligned cube
+ *
+ * @author alteredq / http://alteredqualia.com/
  */
 
 function AudioListener() {
@@ -41391,8 +41392,7 @@ Object.assign( Cylindrical.prototype, {
 } );
 
 /**
- * @author mrdoob / http://mrdoob.com/
- * @author WestLangley / http://github.com/WestLangley
+ * @author alteredq / http://alteredqualia.com/
  */
 
 function VertexNormalsHelper( object, size, hex, linewidth ) {
@@ -41535,11 +41535,9 @@ VertexNormalsHelper.prototype.update = ( function () {
 }() );
 
 /**
- * @author Sean Griffin / http://twitter.com/sgrif
- * @author Michael Guerrero / http://realitymeltdown.com
+ * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
- * @author ikerr / http://verold.com
- * @author Mugen87 / https://github.com/Mugen87
+ * @author WestLangley / http://github.com/WestLangley
  */
 
 function getBoneList( object ) {
@@ -41654,7 +41652,6 @@ SkeletonHelper.prototype.updateMatrixWorld = function () {
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
- * @author Mugen87 / https://github.com/Mugen87
  */
 
 function HemisphereLightHelper( light, size, color ) {
@@ -41738,7 +41735,6 @@ HemisphereLightHelper.prototype.update = function () {
 
 /**
  * @author mrdoob / http://mrdoob.com/
- * @author WestLangley / http://github.com/WestLangley
  */
 
 function FaceNormalsHelper( object, size, hex, linewidth ) {
@@ -41847,12 +41843,8 @@ FaceNormalsHelper.prototype.update = ( function () {
 
 /**
  * @author alteredq / http://alteredqualia.com/
- * @author Mugen87 / https://github.com/Mugen87
- *
- *	- shows frustum, line of sight and up of the camera
- *	- suitable for fast updates
- * 	- based on frustum visualization in lightgl.js shadowmap example
- *		http://evanw.github.com/lightgl.js/tests/shadowmap.html
+ * @author mrdoob / http://mrdoob.com/
+ * @author WestLangley / http://github.com/WestLangley
  */
 
 function CameraHelper( camera ) {
@@ -42045,8 +42037,8 @@ CameraHelper.prototype.update = function () {
 }();
 
 /**
- * @author sroucheray / http://sroucheray.org/
  * @author mrdoob / http://mrdoob.com/
+ * @author Mugen87 / http://github.com/Mugen87
  */
 
 function AxesHelper( size ) {
@@ -42288,8 +42280,6 @@ CatmullRomCurve3.prototype.copy = function ( source ) {
 
 };
 
-//
-
 Curve.create = function ( construct, getPoint ) {
 
 	console.log( 'THREE.Curve.create() has been deprecated' );
@@ -42393,13 +42383,13 @@ Object.assign( Spline.prototype, {
 
 } );
 
+//
+
 SkeletonHelper.prototype.update = function () {
 
 	console.error( 'THREE.SkeletonHelper: update() no longer needs to be called.' );
 
 };
-
-//
 
 Object.assign( Box2.prototype, {
 
@@ -43536,6 +43526,8 @@ AudioAnalyser.prototype.getData = function () {
 
 };
 
+//
+
 class ThreeEnvironment {
   
   /**
@@ -43636,7 +43628,7 @@ function oncreate$1() {
 }
 
 function encapsulateStyles$2(node) {
-	setAttribute(node, "svelte-2482197807", "");
+	setAttribute(node, "svelte-293664707", "");
 }
 
 function create_main_fragment$2(state, component) {
@@ -43715,6 +43707,7 @@ class Foo {
 }
 
 var f = new Foo();
+
 
 var threePlayground = new ThreePlayground({
   target: document.body
