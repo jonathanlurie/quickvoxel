@@ -1,0 +1,56 @@
+<div ref:threeParentDiv class="threeParentDiv">
+</div>
+
+
+<style>
+  .threeParentDiv {
+    z-index: 1;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #0A9;
+    
+  }
+</style>
+
+
+<script>
+
+//import * as THREE from 'three';
+import { ThreeEnvironment } from '../ThreeEnvironment.js';
+
+export default {
+  
+  data() {
+    return {
+      threeEnvironment: null
+    }
+  },
+  
+  
+  oncreate: function () {
+    this.set({threeEnvironment: new ThreeEnvironment( this.refs.threeParentDiv )})
+  },
+  
+  
+  
+  
+  computed: {
+    
+  },
+  
+  
+  
+  methods: {
+
+    
+  }
+  
+};
+  
+    
+</script>

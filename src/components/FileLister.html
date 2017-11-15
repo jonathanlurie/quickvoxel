@@ -1,0 +1,77 @@
+<div class="wrapper">
+  <ul>
+  {{#each files as file, i}}
+    <li on:click='selectFile( i )' >{{i}}: {{file.name}}</li>
+  {{/each}}
+  </ul>
+</div>
+
+
+
+<!--
+This is a Svelte component. Click the toggle
+below right to see the generated code.
+
+You can interact with this component via your
+browser's console – try running the following:
+
+    app.set({ name: 'everybody' });
+
+You can also update the data via the JSON
+editor on this page.
+-->
+
+<style>
+  .wrapper {
+    z-index: 2;
+    position: fixed;
+  }
+</style>
+
+
+<script>
+
+
+
+export default {
+  
+  data() {
+    return {
+      files: []
+    }
+  },
+  
+  
+  oncreate: function () {
+
+
+  },
+  
+  
+  
+  /*
+  computed: {
+    files: leFoo => leFoo.getFiles()
+  },
+  */
+  
+  
+  methods: {
+    
+    updateFileList: function(){
+      this.set({ files: this.get("leFoo").getFiles() });
+    },
+    
+    
+    selectFile: function(i){
+      console.log( i );
+    }
+  }
+  
+  
+  
+  
+};
+  
+    
+</script>
