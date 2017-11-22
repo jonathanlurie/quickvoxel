@@ -1,9 +1,17 @@
 
+import * as PIXPIPE from 'pixpipejs'; 
+
 /**
 * Gives the list of acceptable modality types and wether (true) or not (false) they
 * are actual types.
 */
 const MODALITY_TYPES = {
+  mesh: "mesh",
+  volume: "volume",
+  unknown: "unknown"
+}
+
+const MODALITY_COMPATIBLE = {
   mesh: true,
   volume: true,
   unknown: false
@@ -57,38 +65,84 @@ class Modality {
   * @param {String} type - 
   */
   setFile( f, type ){
-    if( type in MODALITY_TYPES && MODALITY_TYPES[type] ){
+    if( type in MODALITY_TYPES && MODALITY_COMPATIBLE[type] ){
       this._file = f;
-      this._type = t
+      this._type = type
     }else{
       console.warn(`The modality ${type} is a possible choice.\nPossible choices are ${Object.keys(MODALITY_TYPES).join('" "')}`);
     }
   }
   
   
-  parseFile(){
-    if( !this._isValid ){
-      return null;
+  
+  /**
+  * Get the object, result of the parsed file. If the file was never read before,
+  * this method will perform an attempt of reading and parsing it.
+  * @param {Function} successCb - callback to use the modality object (called with the object as argument)
+  * @param {Function} failCb - callback to use if the modality cannot retrieve the assicated object
+  */
+  GetObject( successCb, failCb ){
+    var that = this;
+    
+    if( !this._object ){
+      if(this._isValid){
+        
+        if( this._type === MODALITY_TYPES.unknown ){
+          failCb();
+          return;
+        }
+        
+        var file2Buff = new PIXPIPE.FileToArrayBufferReader();
+        file2Buff.addInput( this._file );
+          
+        if( this._isTextFile() ){
+          file2Buff.setMetadata("readAsText", true);
+        }
+        
+        file2Buff.on("ready", function(){
+          var buff = this.getOutput();
+          var object = null;
+          
+          if( this._type === MODALITY_TYPES.volume ){
+            var generic3DDecoder = new pixpipe.Image3DGenericDecoderAlt();
+            generic3DDecoder.addInput( buff );
+            generic3DDecoder.update();
+            object = generic3DDecoder.getOutput();
+          }else if( this._type === MODALITY_TYPES.mesh ){
+            var meshParser = new pixpipe.MniObjDecoder();
+            meshParser.addInput( buff );
+            meshParser.update();
+            object = meshParser.getOutput();
+          }
+          
+          if( object ){
+            that._object = object;
+            successCb( that._object );
+          }else{
+            that._isValid = false;
+            failCb();
+          }
+          
+        });
+
+        file2Buff.update();
+      }else{
+        console.warn(`ERROR: The file ${this._file.name} is not a valid ${this._type}.`);
+      }
     }else{
-      // TODO
+      successCb( this._object )
     }
   }
   
   
   /**
-  * Get the object, result of the parsed file. If the file was never read before,
-  * this method will perform an attempt of reading and parsing it. 
-  * @return {Object} most likely a Pixpipe object, or null if incompatible with the given type.
+  * [NOTICE] This is very basic but accurate for the moment. This method should
+  * be improved as new file types are included.  
+  * Get if the given file to load is a text file or a binary file
+  * @return {Boolean} true for text file, false for binary file
   */
-  GetObject(){
-    if( !this._object ){
-      this.parseFile();
-      if(!this._isValid){
-        console.warn(`ERROR: The file ${this._file.name} is not a valid ${this._type}.`);
-      }
-    }
-    
-    return this._object;
+  _isTextFile(){
+    return !( this._type == "volume" );
   }
   
   
@@ -120,4 +174,24 @@ class Modality {
     return this._isValid;
   }
   
-}
+  
+  /**
+  * Get the name of this modalitie's file
+  * @return {String} the filename
+  */
+  getFilename(){
+    return this._file.name;
+  }
+  
+  
+  /**
+  * Get the type of a modality
+  * @return {String} type ("volume", "mesh")
+  */
+  getType(){
+    return this._type;
+  }
+  
+} /* END of class Modality */
+
+export { Modality };

@@ -1,7 +1,6 @@
 <div class="wrapper">
-<h1>Hello {{name}}, pick a file</h1>
-<input type="file" class="fileDialog" on:change='loadFile(event)'>
-<button on:click='printFiles()'>Print list of files</button>
+<input class="invisible" ref:fileInput type="file" on:change='loadFile(event)'>
+<div on:click='simulateClickOnFileInput()' class="button">open file</div>
 </div>
 
 
@@ -21,8 +20,7 @@ editor on this page.
 
 <style>
   .wrapper {
-    z-index: 2;
-    position: fixed;
+
   }
 
   .fileDialog {
@@ -37,19 +35,16 @@ editor on this page.
     methods: {
       
       loadFile: function(e){
-        var files = e.target.files;
-        this.get('leFoo').addFiles( files );
-        //this.get('fileLister').updateFileList();
-        //this.up();
-        
-        this.fire('fileAdded', {files: files})
-      },
-      
-      printFiles: function(){
-        console.log( this.get('leFoo').getFiles() );
+        var file = e.target.files[0];
 
+        // externalize that
+        this.get( "modalityCollection" ).addModality( file, this.get("modalityName"), null, null );
       },
       
+      
+      simulateClickOnFileInput: function(){
+        this.refs.fileInput.click();
+      }
       
     },
     

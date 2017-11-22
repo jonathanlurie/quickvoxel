@@ -1,0 +1,61 @@
+<div class="wrapper">
+<h1>Hello {{name}}, pick a file</h1>
+<input type="file" class="fileDialog" on:change='loadFile(event)'>
+<button on:click='printFiles()'>Print list of files</button>
+</div>
+
+
+
+<!--
+This is a Svelte component. Click the toggle
+below right to see the generated code.
+
+You can interact with this component via your
+browser's console – try running the following:
+
+    app.set({ name: 'everybody' });
+
+You can also update the data via the JSON
+editor on this page.
+-->
+
+<style>
+  .wrapper {
+    z-index: 2;
+    position: fixed;
+  }
+
+  .fileDialog {
+    color: blue;
+  }
+</style>
+
+
+<script>
+
+  export default {
+    methods: {
+      
+      loadFile: function(e){
+        var files = e.target.files;
+        this.get('leFoo').addFiles( files );
+        //this.get('fileLister').updateFileList();
+        //this.up();
+        
+        this.fire('fileAdded', {files: files})
+      },
+      
+      printFiles: function(){
+        console.log( this.get('leFoo').getFiles() );
+
+      },
+      
+      
+    },
+    
+    
+
+  };
+  
+    
+</script>

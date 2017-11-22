@@ -17,6 +17,7 @@
     "start": "serve public"
   },
   "dependencies": {
+    "pixpipejs": "github:pixpipe/pixpipejs",
     "three": "^0.88.0"
   }
 }

@@ -2,16 +2,32 @@ import FileOpener from './components/FileOpener.html';
 import FileLister from './components/FileLister.html';
 import ThreePlayground from './components/ThreePlayground.html';
 
-import { Foo } from './Foo.js';
+import { ModalityCollection } from './core/ModalityCollection.js'; 
 
-var f = new Foo();
+import * as PIXPIPE from 'pixpipejs'; 
 
+//import { Image2D } from "pixpipejs";
 
+var modalityCollection = new ModalityCollection();
+
+/*
 var threePlayground = new ThreePlayground({
-  target: document.body
+  target: document.body 
+})
+*/
+
+
+var meshOpener = new FileOpener({
+  target: document.body,
+  data: {
+    modalityName: "mesh",
+    modalityCollection: modalityCollection
+  }
 })
 
 
+
+/*
 var fileOpener = new FileOpener({
   target: document.body,
   data: {
@@ -27,6 +43,7 @@ var fileLister = new FileLister({
     leFoo: f,
   }
 });
+*/
 
 /*
 fileOpener.up = function(){
@@ -35,12 +52,13 @@ fileOpener.up = function(){
 }
 */
 
+/*
 const listener = fileOpener.on( 'fileAdded', function(event){
   console.log( event.files );
   //console.log( `those files were just added ${event.files.map(function(f){return f.name}).join(" ")}` );
   fileLister.updateFileList();
 });
-
+*/
 
 
 
